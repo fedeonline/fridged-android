@@ -1,0 +1,48 @@
+# Gradle / Android build output
+.gradle/
+.kotlin/
+build/
+/captures
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+output-metadata.json
+
+# Local machine configuration (SDK path, per-machine properties)
+local.properties
+
+# Never commit credentials or Firebase project identity (see docs/PLAN.md section 9)
+google-services.json
+!google-services.example.json
+*.jks
+*.keystore
+keystore.properties
+.firebaserc
+service-account*.json
+*-firebase-adminsdk-*.json
+*.pem
+*.key
+.env
+.env.*
+
+# Firebase CLI and emulator local state
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+ui-debug.log
+database-debug.log
+pubsub-debug.log
+node_modules/
+
+# Editors and OS
+.DS_Store
+.idea/
+*.iml
+.vscode/
+
+# Local working notes (installation details), never published
+PROGRESS.md
