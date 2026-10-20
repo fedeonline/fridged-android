@@ -1,0 +1,11 @@
+{
+  "name": "fridged-android-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "set-owner-claim": "node set-owner-claim.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.0"
+  }
+}

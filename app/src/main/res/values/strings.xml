@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Fridged</string>
+
+    <!-- Sign-in -->
+    <string name="sign_in_title">Sign in</string>
+    <string name="sign_in_email">Email</string>
+    <string name="sign_in_password">Password</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="sign_in_error_invalid_credentials">Wrong email or password.</string>
+    <string name="sign_in_error_not_authorized">This account is not authorized to use the fridge.</string>
+    <string name="sign_in_error_too_many_attempts">Too many attempts. Try again later.</string>
+    <string name="sign_in_error_network">No connection. Check the network and try again.</string>
+    <string name="sign_in_error_unknown">Sign-in failed. Try again.</string>
+
+    <!-- Navigation -->
+    <string name="nav_status">Status</string>
+    <string name="nav_history">History</string>
+    <string name="nav_band">Band</string>
+
+    <!-- Settings menu -->
+    <string name="menu_more">More options</string>
+    <string name="menu_signed_in_as">Signed in as %1$s</string>
+    <string name="menu_sign_out">Sign out</string>
+
+    <string name="not_implemented">Coming soon.</string>
+</resources>

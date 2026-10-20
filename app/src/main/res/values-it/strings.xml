@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sign-in -->
+    <string name="sign_in_title">Accedi</string>
+    <string name="sign_in_email">Email</string>
+    <string name="sign_in_password">Password</string>
+    <string name="sign_in_button">Accedi</string>
+    <string name="sign_in_error_invalid_credentials">Email o password errate.</string>
+    <string name="sign_in_error_not_authorized">Questo account non è autorizzato a usare il frigo.</string>
+    <string name="sign_in_error_too_many_attempts">Troppi tentativi. Riprova più tardi.</string>
+    <string name="sign_in_error_network">Nessuna connessione. Controlla la rete e riprova.</string>
+    <string name="sign_in_error_unknown">Accesso non riuscito. Riprova.</string>
+
+    <!-- Navigation -->
+    <string name="nav_status">Stato</string>
+    <string name="nav_history">Storico</string>
+    <string name="nav_band">Intervallo</string>
+
+    <!-- Settings menu -->
+    <string name="menu_more">Altre opzioni</string>
+    <string name="menu_signed_in_as">Accesso come %1$s</string>
+    <string name="menu_sign_out">Esci</string>
+
+    <string name="not_implemented">Prossimamente.</string>
+</resources>

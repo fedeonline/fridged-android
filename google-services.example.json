@@ -1,0 +1,28 @@
+{
+  "project_info": {
+    "project_number": "000000000000",
+    "project_id": "example-project",
+    "storage_bucket": "example-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "android_client_info": { "package_name": "io.github.fedeonline.fridged" }
+      },
+      "oauth_client": [],
+      "api_key": [{ "current_key": "FAKE_API_KEY_REPLACE_WITH_YOUR_OWN" }],
+      "services": { "appinvite_service": { "other_platform_oauth_client": [] } }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:000000000000:android:1111111111111111111111",
+        "android_client_info": { "package_name": "io.github.fedeonline.fridged.debug" }
+      },
+      "oauth_client": [],
+      "api_key": [{ "current_key": "FAKE_API_KEY_REPLACE_WITH_YOUR_OWN" }],
+      "services": { "appinvite_service": { "other_platform_oauth_client": [] } }
+    }
+  ],
+  "configuration_version": "1"
+}
