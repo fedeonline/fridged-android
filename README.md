@@ -42,6 +42,19 @@ Nothing secret is in this repository. Each machine needs:
 
 Debug and release have different application ids and can be installed side by side.
 
+## Firestore security rules
+
+Rules live in `firebase/firestore.rules` and are tested against the Firestore emulator
+(needs Java 11+). Tests use the demo project `demo-fridged`, never a real one.
+
+```sh
+cd firebase && npm install
+npm test                                           # emulator + rules tests
+npx firebase login                                 # once per machine
+npx firebase use --add                             # once: pick the project (writes .firebaserc, git-ignored)
+npm run deploy:rules
+```
+
 ## Owner claim
 
 Firestore rules only allow users with the `owner` custom claim. Set it once with a

@@ -1,0 +1,40 @@
+rules_version = '2';
+
+// Rules for the fridged-android app (docs/PLAN.md section 4).
+// The fridged daemon writes through a service account and is not affected by them.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner() {
+      return request.auth != null && request.auth.token.owner == true;
+    }
+
+    // Same rules as the daemon's `check_band`: exactly targetMin and targetMax,
+    // numbers within 0–25 °C, at least 0.5 °C apart. NaN and ±Infinity fail the
+    // comparisons, so they are rejected too.
+    function isValidBand(band) {
+      return band.keys().hasOnly(['targetMin', 'targetMax'])
+        && band.keys().hasAll(['targetMin', 'targetMax'])
+        && band.targetMin is number
+        && band.targetMax is number
+        && band.targetMin >= 0 && band.targetMin <= 25
+        && band.targetMax >= 0 && band.targetMax <= 25
+        && band.targetMax - band.targetMin >= 0.5;
+    }
+
+    match /devices/{deviceId} {
+      match /status/current {
+        allow read: if isOwner();
+      }
+
+      match /samples/{sampleId} {
+        allow read: if isOwner();
+      }
+
+      match /settings/current {
+        allow read, delete: if isOwner();
+        allow create, update: if isOwner() && isValidBand(request.resource.data);
+      }
+    }
+  }
+}

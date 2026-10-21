@@ -46,4 +46,5 @@ already publishes or reads. Nothing changes on the Raspberry Pi. The full plan i
   (default), Italian in `values-it/strings.xml`. Add both at the same time.
 - One cycle per feature: model and tests first, UI on the fake repository, then Firestore
   wiring tested against `fridge-sim`.
-- `./gradlew lint testDebugUnitTest` clean before every commit.
+- `./gradlew lint testDebugUnitTest` clean before every commit; when `firebase/` changes,
+  `cd firebase && npm test` too. Never deploy rules that have not passed the tests.
