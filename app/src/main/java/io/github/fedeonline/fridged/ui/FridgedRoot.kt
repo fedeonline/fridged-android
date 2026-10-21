@@ -21,12 +21,17 @@ fun FridgedRoot(container: AppContainer) {
     if (signedIn == null) {
         SignInScreen(viewModel { SignInViewModel(authRepository) })
     } else {
+        val device by container.deviceSelection.device.collectAsStateWithLifecycle()
+        val repository = container.fridgeRepository
+        // Keyed by device: switching device gets fresh view models for the other fridge.
         HomeScreen(
             email = signedIn.email,
             onSignOut = authRepository::signOut,
-            statusViewModel = { viewModel { StatusViewModel(container.fridgeRepository, container.device) } },
-            historyViewModel = { viewModel { HistoryViewModel(container.fridgeRepository, container.device) } },
-            bandViewModel = { viewModel { BandViewModel(container.fridgeRepository, container.device) } },
+            device = device,
+            onSelectDevice = container.deviceSelection.select,
+            statusViewModel = { viewModel(key = "status-${device.id}") { StatusViewModel(repository, device) } },
+            historyViewModel = { viewModel(key = "history-${device.id}") { HistoryViewModel(repository, device) } },
+            bandViewModel = { viewModel(key = "band-${device.id}") { BandViewModel(repository, device) } },
         )
     }
 }

@@ -19,6 +19,8 @@
     <!-- Settings menu -->
     <string name="menu_more">Altre opzioni</string>
     <string name="menu_signed_in_as">Accesso come %1$s</string>
+    <string name="menu_device_real">Frigo vero (fridge)</string>
+    <string name="menu_device_simulated">Simulatore (fridge-sim)</string>
     <string name="menu_sign_out">Esci</string>
 
     <!-- Status -->

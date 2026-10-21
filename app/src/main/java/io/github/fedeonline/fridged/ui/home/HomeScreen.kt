@@ -3,6 +3,7 @@ package io.github.fedeonline.fridged.ui.home
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
@@ -53,6 +55,9 @@ enum class Section(@StringRes val label: Int, val icon: ImageVector) {
 fun HomeScreen(
     email: String,
     onSignOut: () -> Unit,
+    device: Device,
+    /** Null when the device cannot be switched (release builds). */
+    onSelectDevice: ((Device) -> Unit)?,
     statusViewModel: @Composable () -> StatusViewModel,
     historyViewModel: @Composable () -> HistoryViewModel,
     bandViewModel: @Composable () -> BandViewModel,
@@ -61,8 +66,12 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(section.label)) },
-                actions = { SettingsMenu(email = email, onSignOut = onSignOut) },
+                title = {
+                    // Debug builds can show either fridge: say which one, always.
+                    val label = stringResource(section.label)
+                    Text(if (onSelectDevice != null) "$label · ${device.id}" else label)
+                },
+                actions = { SettingsMenu(email, onSignOut, device, onSelectDevice) },
             )
         },
         bottomBar = {
@@ -92,7 +101,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun SettingsMenu(email: String, onSignOut: () -> Unit) {
+private fun SettingsMenu(email: String, onSignOut: () -> Unit, device: Device, onSelectDevice: ((Device) -> Unit)?) {
     var expanded by remember { mutableStateOf(false) }
     IconButton(onClick = { expanded = true }) {
         Icon(Icons.Filled.MoreVert, contentDescription = stringResource(R.string.menu_more))
@@ -103,6 +112,20 @@ private fun SettingsMenu(email: String, onSignOut: () -> Unit) {
             onClick = {},
             enabled = false,
         )
+        if (onSelectDevice != null) {
+            HorizontalDivider()
+            Device.entries.forEach {
+                DropdownMenuItem(
+                    text = { Text(stringResource(it.label())) },
+                    onClick = {
+                        expanded = false
+                        onSelectDevice(it)
+                    },
+                    trailingIcon = { if (it == device) Icon(Icons.Filled.Check, contentDescription = null) },
+                )
+            }
+            HorizontalDivider()
+        }
         DropdownMenuItem(
             text = { Text(stringResource(R.string.menu_sign_out)) },
             onClick = {
@@ -113,6 +136,12 @@ private fun SettingsMenu(email: String, onSignOut: () -> Unit) {
     }
 }
 
+@StringRes
+private fun Device.label(): Int = when (this) {
+    Device.FRIDGE -> R.string.menu_device_real
+    Device.SIMULATED -> R.string.menu_device_simulated
+}
+
 @Preview
 @Composable
 private fun HomePreview() {
@@ -121,6 +150,8 @@ private fun HomePreview() {
         HomeScreen(
             email = "me@example.com",
             onSignOut = {},
+            device = Device.SIMULATED,
+            onSelectDevice = {},
             statusViewModel = { viewModel { StatusViewModel(repository, Device.SIMULATED) } },
             historyViewModel = { viewModel { HistoryViewModel(repository, Device.SIMULATED) } },
             bandViewModel = { viewModel { BandViewModel(repository, Device.SIMULATED) } },

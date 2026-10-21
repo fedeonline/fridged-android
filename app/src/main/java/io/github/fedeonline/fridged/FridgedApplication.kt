@@ -6,7 +6,10 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import io.github.fedeonline.fridged.auth.AuthRepository
 import io.github.fedeonline.fridged.auth.FirebaseAuthRepository
+import io.github.fedeonline.fridged.data.DeviceSelection
+import io.github.fedeonline.fridged.data.FixedDeviceSelection
 import io.github.fedeonline.fridged.data.FridgeRepository
+import io.github.fedeonline.fridged.data.PreferencesDeviceSelection
 import io.github.fedeonline.fridged.data.PreferencesSampleCoverage
 import io.github.fedeonline.fridged.data.firestore.FirestoreFridgeRepository
 import io.github.fedeonline.fridged.model.Device
@@ -21,7 +24,9 @@ class FridgedApplication : Application() {
         container = AppContainer(
             authRepository = FirebaseAuthRepository(Firebase.auth, MainScope()),
             fridgeRepository = FirestoreFridgeRepository(Firebase.firestore, PreferencesSampleCoverage(this)),
-            device = Device.fromId(BuildConfig.DEFAULT_DEVICE_ID),
+            deviceSelection = Device.fromId(BuildConfig.DEFAULT_DEVICE_ID).let { default ->
+                if (BuildConfig.DEBUG) PreferencesDeviceSelection(this, default) else FixedDeviceSelection(default)
+            },
         )
     }
 }
@@ -30,5 +35,5 @@ class FridgedApplication : Application() {
 class AppContainer(
     val authRepository: AuthRepository,
     val fridgeRepository: FridgeRepository,
-    val device: Device,
+    val deviceSelection: DeviceSelection,
 )

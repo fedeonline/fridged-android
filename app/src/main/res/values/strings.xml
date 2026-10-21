@@ -21,6 +21,8 @@
     <!-- Settings menu -->
     <string name="menu_more">More options</string>
     <string name="menu_signed_in_as">Signed in as %1$s</string>
+    <string name="menu_device_real">Real fridge (fridge)</string>
+    <string name="menu_device_simulated">Simulator (fridge-sim)</string>
     <string name="menu_sign_out">Sign out</string>
 
     <!-- Status -->
