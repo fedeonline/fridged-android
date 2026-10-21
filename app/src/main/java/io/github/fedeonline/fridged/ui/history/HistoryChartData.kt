@@ -41,8 +41,8 @@ data class ChartData(
             samples.forEachIndexed { i, s ->
                 val x = xs[i]
                 val t = s.temperature
-                val continues = t != null && previousX != null && x - previousX!! <= maxGap &&
-                    samples[i - 1].temperature != null
+                val gap = previousX?.let { x - it }
+                val continues = t != null && gap != null && gap <= maxGap && samples[i - 1].temperature != null
                 if (t != null) {
                     if (continues) runs.last().add(x to t) else runs.add(mutableListOf(x to t))
                 }
