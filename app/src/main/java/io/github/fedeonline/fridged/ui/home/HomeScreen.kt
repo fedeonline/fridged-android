@@ -35,6 +35,8 @@ import io.github.fedeonline.fridged.R
 import io.github.fedeonline.fridged.data.fake.FakeData
 import io.github.fedeonline.fridged.data.fake.FakeFridgeRepository
 import io.github.fedeonline.fridged.model.Device
+import io.github.fedeonline.fridged.ui.history.HistoryScreen
+import io.github.fedeonline.fridged.ui.history.HistoryViewModel
 import io.github.fedeonline.fridged.ui.status.StatusScreen
 import io.github.fedeonline.fridged.ui.status.StatusViewModel
 import java.time.Instant
@@ -53,6 +55,7 @@ fun HomeScreen(
     email: String,
     onSignOut: () -> Unit,
     statusViewModel: @Composable () -> StatusViewModel,
+    historyViewModel: @Composable () -> HistoryViewModel,
 ) {
     var section by rememberSaveable { mutableStateOf(Section.STATUS) }
     Scaffold(
@@ -82,8 +85,9 @@ fun HomeScreen(
                 onOpenHistory = { section = Section.HISTORY },
                 modifier = contentModifier,
             )
-            // History and Band arrive with features 5 and 6.
-            Section.HISTORY, Section.BAND -> Box(contentModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Section.HISTORY -> HistoryScreen(viewModel = historyViewModel(), modifier = contentModifier)
+            // Band arrives with feature 6.
+            Section.BAND -> Box(contentModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(stringResource(R.string.not_implemented))
             }
         }
@@ -121,6 +125,7 @@ private fun HomePreview() {
             email = "me@example.com",
             onSignOut = {},
             statusViewModel = { viewModel { StatusViewModel(repository, Device.SIMULATED) } },
+            historyViewModel = { viewModel { HistoryViewModel(repository, Device.SIMULATED) } },
         )
     }
 }

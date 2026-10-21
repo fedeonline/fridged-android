@@ -58,5 +58,18 @@
     <string name="banner_safe">Safe mode: the temperature sensor is not responding, so the compressor runs on a fixed timed cycle.</string>
     <string name="banner_stale">No news from the fridge for over 15 minutes. The controller may be offline; the fridge keeps regulating on its own.</string>
 
+    <!-- History -->
+    <string name="history_range_6h">6 h</string>
+    <string name="history_range_24h">24 h</string>
+    <string name="history_range_7d">7 days</string>
+    <string name="history_empty">No readings in this period.</string>
+    <string name="history_legend_band">Target band</string>
+    <string name="history_legend_compressor">Compressor on</string>
+    <string name="history_legend_safe">Safe mode</string>
+    <string name="history_min">Minimum</string>
+    <string name="history_max">Maximum</string>
+    <string name="history_mean">Average</string>
+    <string name="history_duty">Compressor on</string>
+
     <string name="not_implemented">Coming soon.</string>
 </resources>

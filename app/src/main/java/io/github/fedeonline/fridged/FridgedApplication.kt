@@ -7,6 +7,7 @@ import com.google.firebase.firestore.firestore
 import io.github.fedeonline.fridged.auth.AuthRepository
 import io.github.fedeonline.fridged.auth.FirebaseAuthRepository
 import io.github.fedeonline.fridged.data.FridgeRepository
+import io.github.fedeonline.fridged.data.PreferencesSampleCoverage
 import io.github.fedeonline.fridged.data.firestore.FirestoreFridgeRepository
 import io.github.fedeonline.fridged.model.Device
 import kotlinx.coroutines.MainScope
@@ -19,7 +20,7 @@ class FridgedApplication : Application() {
         super.onCreate()
         container = AppContainer(
             authRepository = FirebaseAuthRepository(Firebase.auth, MainScope()),
-            fridgeRepository = FirestoreFridgeRepository(Firebase.firestore),
+            fridgeRepository = FirestoreFridgeRepository(Firebase.firestore, PreferencesSampleCoverage(this)),
             device = Device.fromId(BuildConfig.DEFAULT_DEVICE_ID),
         )
     }

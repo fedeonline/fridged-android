@@ -58,5 +58,18 @@
     <string name="banner_safe">Modalità sicura: il sensore di temperatura non risponde, quindi il compressore funziona con un ciclo a tempo fisso.</string>
     <string name="banner_stale">Nessuna notizia dal frigo da oltre 15 minuti. Il controllo potrebbe essere offline; il frigo continua a regolarsi da solo.</string>
 
+    <!-- History -->
+    <string name="history_range_6h">6 h</string>
+    <string name="history_range_24h">24 h</string>
+    <string name="history_range_7d">7 giorni</string>
+    <string name="history_empty">Nessuna lettura in questo periodo.</string>
+    <string name="history_legend_band">Intervallo</string>
+    <string name="history_legend_compressor">Compressore acceso</string>
+    <string name="history_legend_safe">Modalità sicura</string>
+    <string name="history_min">Minima</string>
+    <string name="history_max">Massima</string>
+    <string name="history_mean">Media</string>
+    <string name="history_duty">Compressore acceso</string>
+
     <string name="not_implemented">Prossimamente.</string>
 </resources>
