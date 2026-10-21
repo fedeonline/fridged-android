@@ -96,6 +96,28 @@ class HistoryBarsTest {
     }
 
     @Test
+    fun `the band steps where it changed and is carried over empty buckets`() {
+        val bars = HistoryBars.of(
+            listOf(
+                at("2026-10-21T16:05:00Z", 9.0).copy(band = Band(8.0, 11.0)),
+                at("2026-10-21T18:05:00Z", 9.5).copy(band = Band(9.0, 11.0)),
+            ),
+            end,
+            HistoryRange.DAY,
+            utc,
+        )
+        val last4 = bars.bars.takeLast(4).map { it.band }
+        // 16:00 old band, 17:00 empty: carried over, 18:00 and 19:00 (empty) new band.
+        assertEquals(listOf(Band(8.0, 11.0), Band(8.0, 11.0), Band(9.0, 11.0), Band(9.0, 11.0)), last4)
+        // Before the first sample, the earliest known band.
+        assertEquals(Band(8.0, 11.0), bars.bars.first().band)
+        // A bar is colored against the band of its own time: 9.0 was inside 8–11.
+        assertEquals(BarTone.IN_BAND, bars.bars[bars.bars.size - 4].tone)
+        // The y range covers every band shown, not only the latest.
+        assertEquals(7.0, bars.minY, 0.0)
+    }
+
+    @Test
     fun `a week of fake data fills every bucket`() {
         val week = HistoryBars.of(FakeData.history(end), end, HistoryRange.WEEK, utc)
         assertTrue(week.bars.all { it.dutyCycle != null })

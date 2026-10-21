@@ -74,14 +74,25 @@ fun BarChart(
         fun y(celsius: Double) = (tempBottom - (celsius - chart.minY) / (chart.maxY - chart.minY) * plotHeight).toFloat()
         fun barLeft(i: Int) = axis + i * slot + (slot - barWidth) / 2
 
-        // Band: faint fill and dashed edges.
-        chart.band?.let { band ->
+        // Band as a step line: each bucket shades the band in force then, and the dashed edges
+        // follow, stepping where the band changed.
+        val dash = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 4.dp.toPx()))
+        val edge = Palette.Mint.copy(alpha = 0.35f)
+        chart.bars.forEachIndexed { i, bar ->
+            val band = bar.band ?: return@forEachIndexed
+            val from = axis + i * slot
+            val to = from + slot
             val bandTop = y(band.max).coerceIn(top, tempBottom)
             val bandBottom = y(band.min).coerceIn(top, tempBottom)
-            drawRect(Palette.Mint.copy(alpha = 0.07f), Offset(axis, bandTop), Size(plotWidth, bandBottom - bandTop))
-            val dash = PathEffect.dashPathEffect(floatArrayOf(3.dp.toPx(), 4.dp.toPx()))
-            for (edge in listOf(bandTop, bandBottom)) {
-                drawLine(Palette.Mint.copy(alpha = 0.35f), Offset(axis, edge), Offset(size.width, edge), 1.dp.toPx(), pathEffect = dash)
+            drawRect(Palette.Mint.copy(alpha = 0.07f), Offset(from, bandTop), Size(slot, bandBottom - bandTop))
+            for (level in listOf(bandTop, bandBottom)) {
+                drawLine(edge, Offset(from, level), Offset(to, level), 1.dp.toPx(), pathEffect = dash)
+            }
+            val previous = chart.bars.getOrNull(i - 1)?.band
+            if (previous != null && previous != band) {
+                for ((a, b) in listOf(y(previous.max) to bandTop, y(previous.min) to bandBottom)) {
+                    if (a != b) drawLine(edge, Offset(from, a.coerceIn(top, tempBottom)), Offset(from, b), 1.dp.toPx())
+                }
             }
         }
 

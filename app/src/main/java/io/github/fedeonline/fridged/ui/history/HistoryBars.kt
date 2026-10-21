@@ -22,6 +22,8 @@ data class Bar(
     val dutyCycle: Double?,
     /** Null for an empty bucket. */
     val tone: BarTone?,
+    /** The band in force in this bucket (carried over empty ones); drawn as a step line. */
+    val band: Band? = null,
 )
 
 /**
@@ -32,7 +34,7 @@ data class Bar(
 data class HistoryBars(
     val bars: List<Bar>,
     val bucket: Duration,
-    /** The band of the latest sample, shaded behind the bars. */
+    /** The band of the latest sample. */
     val band: Band?,
     val minY: Double,
     val maxY: Double,
@@ -54,12 +56,16 @@ data class HistoryBars(
                 .filter { it.time >= firstStart && it.time <= end }
                 .groupBy { (Duration.between(firstStart, it.time).seconds / bucket.seconds).toInt() }
             val band = samples.lastOrNull { it.band != null }?.band
+            // The band in force, carried from bucket to bucket; before the first sample with one,
+            // the earliest known band.
+            var inForce = samples.firstOrNull { it.band != null }?.band
 
             val bars = (0 until count).map { i ->
                 val inBucket = groups[i].orEmpty()
                 val readings = inBucket.mapNotNull { it.temperature }
                 val mean = readings.takeIf { it.isNotEmpty() }?.average()
-                val bucketBand = inBucket.lastOrNull { it.band != null }?.band ?: band
+                inBucket.lastOrNull { it.band != null }?.band?.let { inForce = it }
+                val bucketBand = inForce
                 Bar(
                     start = firstStart.plus(bucket.multipliedBy(i.toLong())),
                     mean = mean,
@@ -73,10 +79,11 @@ data class HistoryBars(
                         mean > bucketBand.max -> BarTone.ABOVE
                         else -> BarTone.IN_BAND
                     },
+                    band = bucketBand,
                 )
             }
 
-            val values = bars.mapNotNull { it.mean } + listOfNotNull(band?.min, band?.max)
+            val values = bars.mapNotNull { it.mean } + bars.mapNotNull { it.band }.flatMap { listOf(it.min, it.max) }
             val low = values.minOrNull()?.let { floor(it - 0.5) } ?: 0.0
             val high = values.maxOrNull()?.let { ceil(it + 0.5) } ?: 10.0
             return HistoryBars(bars, bucket, band, minY = low, maxY = maxOf(high, low + 2))
