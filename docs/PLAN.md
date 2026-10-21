@@ -248,5 +248,6 @@ Spark (free) plan is expected to be enough:
 
 ## 11. Open questions
 
-1. Identity Platform upgrade: confirm in the console that it stays free on
-   Spark before enabling it (checked during feature 1).
+1. ~~Identity Platform upgrade: confirm in the console that it stays free on
+   Spark before enabling it.~~ Resolved: the project stays on Spark after the
+   upgrade; sign-up is disabled ("Enable create" unchecked).
