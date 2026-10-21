@@ -300,6 +300,7 @@ Choices made while building, not visible in the sections above:
   mockups ("dial", "pastel cards", "instrument"): the dial won. The Status dial shows
   the band as a mint arc and the temperature as a needle on a 10 °C scale centred on
   the band; Band shows the same dial with blue (min) and peach (max) knobs; the widget
-  draws it as a bitmap, since Glance cannot draw arcs, and shrinks when narrow.
+  draws it as a bitmap, since Glance cannot draw arcs, and shrinks when narrow. The
+  launcher icon is the same dial (mint band in release, peach in debug).
   Colors carry meaning: mint band/OK, blue compressor/minimum, peach maximum/stale,
   lilac curves and SAFE, pastel red faults.

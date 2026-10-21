@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The app's dial: 270° track, the band 8–11 °C on a 4–14 °C scale, the needle at 8.6 °C. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M54,30a6,6 0,0 0,-6 6v22.6a10,10 0,1 0,12 0V36a6,6 0,0 0,-6 -6zM54,34a2,2 0,0 1,2 2v24.8l0.9,0.6a6,6 0,1 1,-5.8 0l0.9,-0.6V36a2,2 0,0 1,2 -2z" />
+        android:pathData="M35.615,72.385 A26,26 0 1,1 72.385,72.385"
+        android:strokeColor="@color/ic_launcher_track"
+        android:strokeLineCap="round"
+        android:strokeWidth="8" />
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M52,46h4v16.5a4,4 0,1 1,-4 0z" />
+        android:pathData="M42.196,30.834 A26,26 0 0,1 75.034,38.718"
+        android:strokeColor="@color/ic_launcher_band"
+        android:strokeLineCap="round"
+        android:strokeWidth="8" />
+    <path
+        android:fillColor="@color/ic_launcher_background"
+        android:pathData="M40.128,28.461 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0" />
+    <path
+        android:fillColor="@color/ic_launcher_needle"
+        android:pathData="M43.628,28.461 a5.5,5.5 0 1,0 11,0 a5.5,5.5 0 1,0 -11,0" />
+    <path
+        android:pathData="M54,44.500 L54,63.500 M45.773,49.250 L62.227,58.750 M62.227,49.250 L45.773,58.750"
+        android:strokeColor="@color/ic_launcher_snowflake"
+        android:strokeLineCap="round"
+        android:strokeWidth="3" />
 </vector>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Debug builds get an orange-red launcher icon to tell them apart from release. -->
-    <color name="ic_launcher_background">#D84315</color>
+    <!-- Debug builds draw the dial's band in peach instead of mint, to tell them apart from release. -->
+    <color name="ic_launcher_band">#FFD6BA</color>
 </resources>

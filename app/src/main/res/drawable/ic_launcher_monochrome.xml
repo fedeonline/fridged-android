@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Themed-icon layer: the launcher tints it, only alpha matters. The track is fainter. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M35.615,72.385 A26,26 0 1,1 72.385,72.385"
+        android:strokeAlpha="0.35"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="8" />
+    <path
+        android:pathData="M42.196,30.834 A26,26 0 0,1 75.034,38.718"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="8" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M43.628,28.461 a5.5,5.5 0 1,0 11,0 a5.5,5.5 0 1,0 -11,0" />
+    <path
+        android:pathData="M54,44.500 L54,63.500 M45.773,49.250 L62.227,58.750 M62.227,49.250 L45.773,58.750"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="3" />
+</vector>

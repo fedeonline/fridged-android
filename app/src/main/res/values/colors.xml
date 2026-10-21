@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background">#15171C</color>
-    <color name="ic_launcher_background">#1E5A8C</color>
+    <!-- Launcher icon: the app's dial on its dark background (ui/theme/Palette.kt). -->
+    <color name="ic_launcher_background">#15171C</color>
+    <color name="ic_launcher_track">#2B2F39</color>
+    <color name="ic_launcher_band">#A8E6CF</color>
+    <color name="ic_launcher_needle">#ECEEF2</color>
+    <color name="ic_launcher_snowflake">#A0C4FF</color>
 </resources>
