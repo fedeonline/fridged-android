@@ -6,6 +6,8 @@
     <string name="sign_in_title">Sign in</string>
     <string name="sign_in_email">Email</string>
     <string name="sign_in_password">Password</string>
+    <string name="sign_in_show_password">Show password</string>
+    <string name="sign_in_hide_password">Hide password</string>
     <string name="sign_in_button">Sign in</string>
     <string name="sign_in_error_invalid_credentials">Wrong email or password.</string>
     <string name="sign_in_error_not_authorized">This account is not authorized to use the fridge.</string>

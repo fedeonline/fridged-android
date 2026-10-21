@@ -4,6 +4,8 @@
     <string name="sign_in_title">Accedi</string>
     <string name="sign_in_email">Email</string>
     <string name="sign_in_password">Password</string>
+    <string name="sign_in_show_password">Mostra password</string>
+    <string name="sign_in_hide_password">Nascondi password</string>
     <string name="sign_in_button">Accedi</string>
     <string name="sign_in_error_invalid_credentials">Email o password errate.</string>
     <string name="sign_in_error_not_authorized">Questo account non è autorizzato a usare il frigo.</string>

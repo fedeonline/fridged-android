@@ -33,4 +33,11 @@ object FridgedIcons {
     val Snowflake = icon("Snowflake", "M12 2v20M4.9 6l14.2 12M19.1 6L4.9 18", "M9 4l3 2 3-2M9 20l3-2 3 2")
     val Check = icon("Check", "M20 6L9 17l-5-5")
     val More = icon("More", "M12 5h.01M12 12h.01M12 19h.01")
+    val Eye = icon("Eye", "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z", "M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0")
+    val EyeOff = icon(
+        "EyeOff",
+        "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z",
+        "M9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0",
+        "M3 3l18 18",
+    )
 }

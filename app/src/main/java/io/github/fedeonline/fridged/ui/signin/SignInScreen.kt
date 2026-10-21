@@ -12,12 +12,17 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -27,11 +32,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.fedeonline.fridged.R
 import io.github.fedeonline.fridged.auth.SignInResult
+import io.github.fedeonline.fridged.ui.theme.FridgedIcons
 import io.github.fedeonline.fridged.ui.theme.FridgedTheme
 
 @Composable
@@ -52,6 +59,8 @@ private fun SignInContent(
     onPasswordChange: (String) -> Unit,
     onSubmit: () -> Unit,
 ) {
+    // Purely visual, so it lives here and not in the view model. Starts hidden.
+    var showPassword by rememberSaveable { mutableStateOf(false) }
     Surface(Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -78,7 +87,17 @@ private fun SignInContent(
                 label = { Text(stringResource(R.string.sign_in_password)) },
                 singleLine = true,
                 enabled = !state.submitting,
-                visualTransformation = PasswordVisualTransformation(),
+                visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { showPassword = !showPassword }) {
+                        Icon(
+                            if (showPassword) FridgedIcons.EyeOff else FridgedIcons.Eye,
+                            contentDescription = stringResource(
+                                if (showPassword) R.string.sign_in_hide_password else R.string.sign_in_show_password,
+                            ),
+                        )
+                    }
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { onSubmit() }),
                 modifier = Modifier
