@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +42,7 @@ import io.github.fedeonline.fridged.ui.format.formatCelsius
 import io.github.fedeonline.fridged.ui.theme.FridgedTheme
 import io.github.fedeonline.fridged.ui.theme.Palette
 import java.time.Instant
+import java.time.ZoneId
 import kotlin.math.roundToInt
 
 @Composable
@@ -75,13 +78,16 @@ private fun Ready(state: HistoryUiState.Ready) {
         Message(R.string.history_empty)
         return
     }
-    Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Palette.Surface).padding(8.dp)) {
-        HistoryChart(
-            samples = state.samples,
-            end = state.end,
-            range = state.range,
-            modifier = Modifier.fillMaxWidth().height(260.dp),
-        )
+    val locale = LocalConfiguration.current.locales[0]
+    val chart = remember(state) { HistoryBars.of(state.samples, state.end, state.range, ZoneId.systemDefault()) }
+    val description = stringResource(
+        R.string.history_chart_description,
+        formatCelsius(state.stats.min, locale),
+        state.stats.max?.let { formatCelsius(it, locale) } ?: "—",
+        state.stats.dutyCycle?.let { "${(it * 100).roundToInt()} %" } ?: "—",
+    )
+    Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Palette.Surface).padding(start = 8.dp, end = 16.dp, top = 12.dp, bottom = 12.dp)) {
+        BarChart(chart, state.range, description)
     }
     Legend()
     Stats(state.stats)
@@ -122,11 +128,12 @@ private fun RangeSelector(selected: HistoryRange, onSelect: (HistoryRange) -> Un
 
 @Composable
 private fun Legend() {
-    val colors = historyChartColors()
-    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        LegendItem(colors.band, R.string.history_legend_band)
-        LegendItem(colors.compressor, R.string.history_legend_compressor)
-        LegendItem(colors.safe, R.string.history_legend_safe)
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        LegendItem(BarTone.IN_BAND.color(), R.string.history_legend_in_band)
+        LegendItem(BarTone.BELOW.color(), R.string.history_legend_below)
+        LegendItem(BarTone.ABOVE.color(), R.string.history_legend_above)
+        LegendItem(BarTone.SAFE.color(), R.string.history_legend_safe)
+        LegendItem(Palette.Blue, R.string.history_legend_compressor)
     }
 }
 

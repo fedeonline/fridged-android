@@ -70,8 +70,11 @@
     <string name="history_range_24h">24 h</string>
     <string name="history_range_7d">7 giorni</string>
     <string name="history_empty">Nessuna lettura in questo periodo.</string>
-    <string name="history_legend_band">Intervallo</string>
-    <string name="history_legend_compressor">Compressore acceso</string>
+    <string name="history_legend_in_band">Nell\'intervallo</string>
+    <string name="history_legend_below">Sotto</string>
+    <string name="history_legend_above">Sopra</string>
+    <string name="history_chart_description">Temperatura media a barre: minima %1$s, massima %2$s, compressore acceso il %3$s del tempo.</string>
+    <string name="history_legend_compressor">Compressore acceso (quota di ogni barra)</string>
     <string name="history_legend_safe">Modalità sicura</string>
     <string name="history_min">Minima</string>
     <string name="history_max">Massima</string>

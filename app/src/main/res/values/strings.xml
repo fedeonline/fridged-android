@@ -70,8 +70,11 @@
     <string name="history_range_24h">24 h</string>
     <string name="history_range_7d">7 days</string>
     <string name="history_empty">No readings in this period.</string>
-    <string name="history_legend_band">Target band</string>
-    <string name="history_legend_compressor">Compressor on</string>
+    <string name="history_legend_in_band">In the band</string>
+    <string name="history_legend_below">Below</string>
+    <string name="history_legend_above">Above</string>
+    <string name="history_chart_description">Mean temperature as bars: minimum %1$s, maximum %2$s, compressor on %3$s of the time.</string>
+    <string name="history_legend_compressor">Compressor on (share of each bar)</string>
     <string name="history_legend_safe">Safe mode</string>
     <string name="history_min">Minimum</string>
     <string name="history_max">Maximum</string>

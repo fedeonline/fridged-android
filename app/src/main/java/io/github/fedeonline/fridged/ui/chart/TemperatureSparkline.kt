@@ -3,7 +3,6 @@ package io.github.fedeonline.fridged.ui.chart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.Zoom
 import com.patrykandpatrick.vico.compose.cartesian.data.CartesianChartModel
@@ -18,8 +17,6 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.Fill
 import io.github.fedeonline.fridged.model.Sample
 import io.github.fedeonline.fridged.ui.history.ChartData
-import io.github.fedeonline.fridged.ui.history.HistoryChartColors
-import io.github.fedeonline.fridged.ui.history.HistoryDecoration
 import io.github.fedeonline.fridged.ui.theme.Palette
 import java.time.Duration
 import java.time.Instant
@@ -45,14 +42,7 @@ fun TemperatureSparkline(samples: List<Sample>, now: Instant, span: Duration, mo
     }
     // One style for every run: by default each series would get its own color.
     val line = LineCartesianLayer.rememberLine(fill = LineCartesianLayer.LineFill.single(Fill(Palette.Lilac)))
-    // The band shading of the History chart, without its compressor strip.
-    val bandOnly = remember(data) {
-        HistoryDecoration(
-            data.segments,
-            HistoryChartColors(band = Palette.Mint.copy(alpha = 0.16f), compressor = Color.Transparent, safe = Color.Transparent),
-            stripHeight = 0f,
-        )
-    }
+    val band = remember(data) { BandDecoration(data.segments, Palette.Mint.copy(alpha = 0.16f)) }
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
@@ -61,7 +51,7 @@ fun TemperatureSparkline(samples: List<Sample>, now: Instant, span: Duration, mo
                     CartesianLayerRangeProvider.fixed(data.minX, data.maxX, data.minY, data.maxY)
                 },
             ),
-            decorations = listOf(bandOnly),
+            decorations = listOf(band),
             getXStep = { _, _, _ -> 1.0 },
         ),
         model = model,
