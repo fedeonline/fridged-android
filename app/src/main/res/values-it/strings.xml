@@ -21,5 +21,42 @@
     <string name="menu_signed_in_as">Accesso come %1$s</string>
     <string name="menu_sign_out">Esci</string>
 
+    <!-- Status -->
+    <string name="status_no_data">Ancora nessun dato dal frigo.</string>
+    <string name="status_not_authorized">Questo account non può leggere i dati del frigo.</string>
+    <string name="status_unavailable">Impossibile caricare i dati del frigo. Riprova più tardi.</string>
+    <string name="status_no_reading">Nessuna lettura dal sensore</string>
+    <string name="status_updated_now">Aggiornato adesso</string>
+    <plurals name="status_updated_minutes">
+        <item quantity="one">Aggiornato %d minuto fa</item>
+        <item quantity="many">Aggiornato %d minuti fa</item>
+        <item quantity="other">Aggiornato %d minuti fa</item>
+    </plurals>
+    <plurals name="status_updated_hours">
+        <item quantity="one">Aggiornato %d ora fa</item>
+        <item quantity="many">Aggiornato %d ore fa</item>
+        <item quantity="other">Aggiornato %d ore fa</item>
+    </plurals>
+    <string name="status_compressor">Compressore</string>
+    <string name="status_held">Trattenuto dalle protezioni del compressore: il controllo lo vuole %1$s.</string>
+    <string name="status_band">Intervallo impostato</string>
+    <string name="status_band_unknown">Non registrato</string>
+    <string name="status_recent">Ultime 6 ore</string>
+    <string name="status_recent_empty">Letture insufficienti per il grafico.</string>
+    <string name="relay_on">acceso</string>
+    <string name="relay_off">spento</string>
+
+    <string name="reason_above_max">Sopra l\'intervallo: raffredda.</string>
+    <string name="reason_at_or_below_min">Raggiunto il minimo dell\'intervallo: in pausa.</string>
+    <string name="reason_in_band">Dentro l\'intervallo.</string>
+    <string name="reason_stale">Lettura del sensore mancante: mantiene l\'ultimo comando.</string>
+    <string name="reason_safe_on">Modalità sicura: ciclo a tempo, raffredda.</string>
+    <string name="reason_safe_off">Modalità sicura: ciclo a tempo, in pausa.</string>
+    <string name="reason_unknown">Motivo sconosciuto.</string>
+
+    <string name="banner_overrun">Il compressore è rimasto acceso troppo a lungo senza raggiungere l\'intervallo. Controlla che la porta sia chiusa e che il frigo funzioni.</string>
+    <string name="banner_safe">Modalità sicura: il sensore di temperatura non risponde, quindi il compressore funziona con un ciclo a tempo fisso.</string>
+    <string name="banner_stale">Nessuna notizia dal frigo da oltre 15 minuti. Il controllo potrebbe essere offline; il frigo continua a regolarsi da solo.</string>
+
     <string name="not_implemented">Prossimamente.</string>
 </resources>

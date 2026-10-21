@@ -30,7 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.fedeonline.fridged.R
+import io.github.fedeonline.fridged.data.fake.FakeData
+import io.github.fedeonline.fridged.data.fake.FakeFridgeRepository
+import io.github.fedeonline.fridged.model.Device
+import io.github.fedeonline.fridged.ui.status.StatusScreen
+import io.github.fedeonline.fridged.ui.status.StatusViewModel
+import java.time.Instant
 import io.github.fedeonline.fridged.ui.theme.FridgedTheme
 
 enum class Section(@StringRes val label: Int, val icon: ImageVector) {
@@ -42,7 +49,11 @@ enum class Section(@StringRes val label: Int, val icon: ImageVector) {
 /** Bottom navigation between the three sections, with the settings menu in the top bar. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(email: String, onSignOut: () -> Unit) {
+fun HomeScreen(
+    email: String,
+    onSignOut: () -> Unit,
+    statusViewModel: @Composable () -> StatusViewModel,
+) {
     var section by rememberSaveable { mutableStateOf(Section.STATUS) }
     Scaffold(
         topBar = {
@@ -64,9 +75,17 @@ fun HomeScreen(email: String, onSignOut: () -> Unit) {
             }
         },
     ) { padding ->
-        // Section screens arrive with features 4–6.
-        Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-            Text(stringResource(R.string.not_implemented))
+        val contentModifier = Modifier.padding(padding)
+        when (section) {
+            Section.STATUS -> StatusScreen(
+                viewModel = statusViewModel(),
+                onOpenHistory = { section = Section.HISTORY },
+                modifier = contentModifier,
+            )
+            // History and Band arrive with features 5 and 6.
+            Section.HISTORY, Section.BAND -> Box(contentModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(stringResource(R.string.not_implemented))
+            }
         }
     }
 }
@@ -96,5 +115,12 @@ private fun SettingsMenu(email: String, onSignOut: () -> Unit) {
 @Preview
 @Composable
 private fun HomePreview() {
-    FridgedTheme { HomeScreen(email = "me@example.com", onSignOut = {}) }
+    val repository = FakeFridgeRepository(FakeData.history(Instant.parse("2026-10-20T08:00:00Z")))
+    FridgedTheme {
+        HomeScreen(
+            email = "me@example.com",
+            onSignOut = {},
+            statusViewModel = { viewModel { StatusViewModel(repository, Device.SIMULATED) } },
+        )
+    }
 }

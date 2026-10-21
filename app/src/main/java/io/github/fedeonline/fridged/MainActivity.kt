@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         val container = (application as FridgedApplication).container
         setContent {
             FridgedTheme {
-                FridgedRoot(container.authRepository)
+                FridgedRoot(container)
             }
         }
     }

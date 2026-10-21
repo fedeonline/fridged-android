@@ -23,5 +23,40 @@
     <string name="menu_signed_in_as">Signed in as %1$s</string>
     <string name="menu_sign_out">Sign out</string>
 
+    <!-- Status -->
+    <string name="status_no_data">No data from the fridge yet.</string>
+    <string name="status_not_authorized">This account cannot read the fridge data.</string>
+    <string name="status_unavailable">Cannot load the fridge data. Try again later.</string>
+    <string name="status_no_reading">No sensor reading</string>
+    <string name="status_updated_now">Updated just now</string>
+    <plurals name="status_updated_minutes">
+        <item quantity="one">Updated %d minute ago</item>
+        <item quantity="other">Updated %d minutes ago</item>
+    </plurals>
+    <plurals name="status_updated_hours">
+        <item quantity="one">Updated %d hour ago</item>
+        <item quantity="other">Updated %d hours ago</item>
+    </plurals>
+    <string name="status_compressor">Compressor</string>
+    <string name="status_held">Held by the compressor protections: the controller wants it %1$s.</string>
+    <string name="status_band">Target band</string>
+    <string name="status_band_unknown">Not recorded</string>
+    <string name="status_recent">Last 6 hours</string>
+    <string name="status_recent_empty">Not enough readings to draw a chart.</string>
+    <string name="relay_on">on</string>
+    <string name="relay_off">off</string>
+
+    <string name="reason_above_max">Above the band: cooling.</string>
+    <string name="reason_at_or_below_min">Reached the bottom of the band: resting.</string>
+    <string name="reason_in_band">Within the band.</string>
+    <string name="reason_stale">Sensor reading missing: keeping the last command.</string>
+    <string name="reason_safe_on">Safe mode: timed cycle, cooling.</string>
+    <string name="reason_safe_off">Safe mode: timed cycle, resting.</string>
+    <string name="reason_unknown">Unknown reason.</string>
+
+    <string name="banner_overrun">The compressor ran too long without reaching the band. Check that the door is closed and the fridge is working.</string>
+    <string name="banner_safe">Safe mode: the temperature sensor is not responding, so the compressor runs on a fixed timed cycle.</string>
+    <string name="banner_stale">No news from the fridge for over 15 minutes. The controller may be offline; the fridge keeps regulating on its own.</string>
+
     <string name="not_implemented">Coming soon.</string>
 </resources>
