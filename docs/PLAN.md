@@ -1,7 +1,9 @@
 # fridged-android — plan
 
-Status: draft for review, no code written yet.
-Data contract derived from `fedeonline/fridged` at commit `35bb832`.
+Status: implemented. Features 1–8 are done (notifications still deferred, see
+section 2); section 12 records where the implementation refined this plan.
+Data contract: [`data-contract.md`](data-contract.md), derived from
+`fedeonline/fridged` at commit `db8e66a`.
 
 ## 1. Goal
 
@@ -135,10 +137,11 @@ Single Gradle module `app`, organized in packages:
 
 | Package | Responsibility |
 | --- | --- |
-| `model` | `Status`, `Sample`, `Band`, band validation (same rules as `check_band`), freshness logic. Pure code, unit tested. |
+| `model` | `Sample` (also the shape of `status/current`), `Band`, band validation (same rules as `check_band`), freshness logic, history stats. Pure code, unit tested. |
 | `data` | `FridgeRepository` interface; Firestore implementation; in-memory fake for previews and tests. |
 | `auth` | email/password sign-in, session state, sign-out. |
 | `ui` | one folder per screen, each with its ViewModel; theme. |
+| `widget` | home-screen widget (Glance) and its refresh worker. |
 
 Same philosophy as the daemon: logic behind interfaces with fakes, so the
 whole UI can be developed and tested without Firebase.
@@ -171,10 +174,13 @@ sections.
 **Band**
 
 - Current band.
-- Min/max inputs with immediate validation messages.
+- Min/max steppers on a 0.5 °C grid, with immediate validation messages
+  (see section 12).
 - Save → state "waiting for the fridge" until `status/current` reports the
   same band, then "applied at HH:MM".
-- "Restore defaults" → deletes `settings/current`.
+- "Restore defaults" → deletes `settings/current`; confirmed when the
+  applied band changes, or after two newer statuses (the daemon's default is
+  not published).
 
 **Settings** (small menu)
 
@@ -183,16 +189,19 @@ sections.
 
 ## 7. Features and definition of done
 
-| # | Feature | Done when |
-| --- | --- | --- |
-| 1 | Firebase and project setup | App builds, installs with `adb`, sign-in works in debug and release; sign-up disabled; owner claim set. |
-| 2 | Security rules | Rules tests pass in the emulator; rules deployed. |
-| 3 | Model and fake repository | Models, band validation and freshness covered by unit tests; Compose previews run on fake data. |
-| 4 | Status screen | Against `fridge-sim` it updates in real time and banners appear when they should. |
-| 5 | History | 24 h chart loads from cache on second open without re-reading all samples. |
-| 6 | Band | A change made in the app is applied by the simulated daemon and shown as confirmed. |
-| 7 | Release | APK signed with the personal keystore, installed on the phone, pointing at the real fridge. |
-| 8 | Extras (later) | Home-screen widget. Notifications deferred (see section 2). |
+| # | Feature | Done when | Done |
+| --- | --- | --- | --- |
+| 1 | Firebase and project setup | App builds, installs with `adb`, sign-in works in debug and release; sign-up disabled; owner claim set. | ✓ |
+| 2 | Security rules | Rules tests pass in the emulator; rules deployed. | ✓ |
+| 3 | Model and fake repository | Models, band validation and freshness covered by unit tests; Compose previews run on fake data. | ✓ |
+| 4 | Status screen | Against `fridge-sim` it updates in real time and banners appear when they should. | ✓ |
+| 5 | History | 24 h chart loads from cache on second open without re-reading all samples. | ✓ |
+| 6 | Band | A change made in the app is applied by the simulated daemon and shown as confirmed. | ✓ |
+| 7 | Release | APK signed with the personal keystore, installed on the phone, pointing at the real fridge. | ✓ |
+| 8 | Extras (later) | Home-screen widget. Notifications deferred (see section 2). | widget ✓ |
+
+The SAFE-mode and overrun banners are covered by unit tests and previews only:
+the simulator cannot produce those states on demand.
 
 Features 1–4 already make a usable app.
 
@@ -221,12 +230,15 @@ Not in the repo:
 | Service account JSON (for the claim script) | local only, never in the repo |
 
 `.gitignore` is written in the first commit, before any Firebase file is
-added. Optional: a pre-commit secret scanner (e.g. gitleaks).
+added. A gitleaks pre-commit hook (`.githooks/pre-commit`, enabled with
+`git config core.hooksPath .githooks`) refuses commits that add secrets, and
+blocks them if gitleaks is not installed.
 
 Repository layout:
 
 ```
 fridged-android/
+├── .githooks/  pre-commit secret scanner
 ├── app/        Android project
 ├── firebase/   security rules, CLI config, rules tests
 ├── scripts/    owner-claim script
@@ -251,3 +263,35 @@ Spark (free) plan is expected to be enough:
 1. ~~Identity Platform upgrade: confirm in the console that it stays free on
    Spark before enabling it.~~ Resolved: the project stays on Spark after the
    upgrade; sign-up is disabled ("Enable create" unchecked).
+
+## 12. Implementation notes
+
+Choices made while building, not visible in the sections above:
+
+- **Application ids**: `io.github.fedeonline.fridged` (release) and
+  `io.github.fedeonline.fridged.debug` (debug, orange launcher icon), so both
+  install side by side; both are registered in the same Firebase project. The
+  Firebase Android API key is restricted to these two apps and their signing
+  certificates.
+- **Release keystore** created during feature 1, to verify release sign-in
+  early, rather than in feature 7.
+- **Band on a 0.5 °C grid**: `check_band` compares `max - min >= 0.5` in IEEE
+  doubles, so some one-decimal pairs that look 0.5 apart are rejected
+  (`4.1 - 3.6 = 0.49999999999999956`). Steppers on a 0.5 grid only produce
+  values exact in binary, so the app never offers a band the daemon refuses.
+- **Incremental history**: samples come from the Firestore cache, plus a live
+  server query from 30 minutes before the latest cached sample (late uploads).
+  How far back the cache is complete is stored per device; a wider range is
+  read whole once. The listener includes metadata changes, otherwise the
+  server's confirmation of unchanged cached data never arrives.
+- **Charts**: the curve breaks at missing readings and at holes longer than
+  15 minutes (daemon offline); the band shading follows the band recorded in
+  each sample. The Status sparkline uses the same data.
+- **Widget**: Glance, refreshed by WorkManager every 15 minutes (Android's
+  minimum), when added, when the app opens, on sign-out and on a device switch;
+  one document read per refresh. It shows the sample's clock time rather than
+  "N min ago", which would go stale between refreshes.
+- **Debug device switch**: the choice is remembered; the top bar always names
+  the device, since debug can also change the real fridge's band.
+- **Simulator for development** runs on a development machine, not on the Pi
+  (see README).
