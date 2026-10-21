@@ -24,6 +24,8 @@ class FakeFridgeRepository(
 
     override fun status(device: Device): Flow<Sample?> = samples.map { it.lastOrNull() }
 
+    override suspend fun latestStatus(device: Device): Sample? = samples.value.lastOrNull()
+
     override fun samples(device: Device, since: Instant): Flow<List<Sample>> =
         samples.map { all -> all.filter { it.time >= since } }
 

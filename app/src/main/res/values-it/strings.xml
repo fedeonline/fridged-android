@@ -91,4 +91,13 @@
     <string name="band_problem_max_range">Il massimo deve essere tra 0 e 25 °C.</string>
     <string name="band_problem_narrow">Il massimo deve superare il minimo di almeno 0,5 °C.</string>
 
+    <!-- Widget -->
+    <string name="widget_description">Temperatura del frigo e compressore a colpo d\'occhio</string>
+    <string name="widget_compressor_on">Compressore acceso · %1$s</string>
+    <string name="widget_compressor_off">Compressore spento · %1$s</string>
+    <string name="widget_safe">Modalità sicura · %1$s</string>
+    <string name="widget_overrun">Guasto compressore · %1$s</string>
+    <string name="widget_stale">Nessuna notizia dalle %1$s</string>
+    <string name="widget_signed_out">Apri l\'app per accedere</string>
+    <string name="widget_no_data">Ancora nessun dato dal frigo</string>
 </resources>

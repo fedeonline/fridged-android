@@ -81,6 +81,7 @@ class StatusViewModelTest {
 
     private class FailingRepository(private val error: Throwable) : FridgeRepository {
         override fun status(device: Device): Flow<Sample?> = flow { throw error }
+        override suspend fun latestStatus(device: Device): Sample? = throw error
         override fun samples(device: Device, since: Instant): Flow<List<Sample>> = flowOf(emptyList())
         override fun settings(device: Device): Flow<Band?> = flowOf(null)
         override suspend fun setBand(device: Device, band: Band) = Unit

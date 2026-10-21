@@ -44,6 +44,13 @@ class FirestoreFridgeRepository(
             .map { snapshot -> snapshot.data?.let(FirestoreMapping::sample) }
             .mapAccessDenied()
 
+    override suspend fun latestStatus(device: Device): Sample? = try {
+        statusDoc(device).get().await().data?.let(FirestoreMapping::sample)
+    } catch (e: FirebaseFirestoreException) {
+        if (e.code == FirebaseFirestoreException.Code.PERMISSION_DENIED) throw FridgeAccessDeniedException(e)
+        throw e
+    }
+
     /**
      * Cached samples plus a live listener on the server for the part the cache may miss
      * ([IncrementalFetch]): reopening a range costs only the new samples, not the whole

@@ -11,6 +11,9 @@ interface FridgeRepository {
     /** The latest sample (`status/current`); null while there is none. */
     fun status(device: Device): Flow<Sample?>
 
+    /** One read of `status/current`, from the server when reachable, else from the cache. */
+    suspend fun latestStatus(device: Device): Sample?
+
     /** Samples with `time >= since`, oldest first. */
     fun samples(device: Device, since: Instant): Flow<List<Sample>>
 
