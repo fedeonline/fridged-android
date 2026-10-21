@@ -11,6 +11,8 @@
     <string name="sign_in_error_network">Nessuna connessione. Controlla la rete e riprova.</string>
     <string name="sign_in_error_unknown">Accesso non riuscito. Riprova.</string>
 
+    <string name="header_fridge">Frigo</string>
+
     <!-- Navigation -->
     <string name="nav_status">Stato</string>
     <string name="nav_history">Storico</string>
@@ -40,10 +42,11 @@
         <item quantity="other">Aggiornato %d ore fa</item>
     </plurals>
     <string name="status_compressor">Compressore</string>
-    <string name="status_held">Trattenuto dalle protezioni del compressore: il controllo lo vuole %1$s.</string>
+    <string name="status_held">Trattenuto: il controllo lo vuole %1$s.</string>
     <string name="status_band">Intervallo impostato</string>
     <string name="status_band_unknown">Non registrato</string>
     <string name="status_recent">Ultime 6 ore</string>
+    <string name="status_open_history">Storico →</string>
     <string name="status_recent_empty">Letture insufficienti per il grafico.</string>
     <string name="relay_on">acceso</string>
     <string name="relay_off">spento</string>
@@ -74,7 +77,11 @@
     <string name="history_duty">Compressore acceso</string>
 
     <!-- Band -->
-    <string name="band_applied">Applicato dal frigo</string>
+    <string name="band_dial_applied">°C · applicato dal frigo</string>
+    <string name="band_dial_new">°C · nuovo intervallo</string>
+    <string name="band_applied_value">Applicato dal frigo: %1$s</string>
+    <string name="band_lower">Abbassa il %1$s</string>
+    <string name="band_raise">Alza il %1$s</string>
     <string name="band_source_app">Impostato dall\'app.</string>
     <string name="band_source_default">Valore predefinito del frigo, dal suo file di configurazione.</string>
     <string name="band_min">Minimo</string>

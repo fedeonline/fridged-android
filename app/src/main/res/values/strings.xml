@@ -13,6 +13,8 @@
     <string name="sign_in_error_network">No connection. Check the network and try again.</string>
     <string name="sign_in_error_unknown">Sign-in failed. Try again.</string>
 
+    <string name="header_fridge">Fridge</string>
+
     <!-- Navigation -->
     <string name="nav_status">Status</string>
     <string name="nav_history">History</string>
@@ -40,10 +42,11 @@
         <item quantity="other">Updated %d hours ago</item>
     </plurals>
     <string name="status_compressor">Compressor</string>
-    <string name="status_held">Held by the compressor protections: the controller wants it %1$s.</string>
+    <string name="status_held">Held back: the controller wants it %1$s.</string>
     <string name="status_band">Target band</string>
     <string name="status_band_unknown">Not recorded</string>
     <string name="status_recent">Last 6 hours</string>
+    <string name="status_open_history">History →</string>
     <string name="status_recent_empty">Not enough readings to draw a chart.</string>
     <string name="relay_on">on</string>
     <string name="relay_off">off</string>
@@ -74,7 +77,11 @@
     <string name="history_duty">Compressor on</string>
 
     <!-- Band -->
-    <string name="band_applied">Applied by the fridge</string>
+    <string name="band_dial_applied">°C · applied by the fridge</string>
+    <string name="band_dial_new">°C · new band</string>
+    <string name="band_applied_value">Applied by the fridge: %1$s</string>
+    <string name="band_lower">Lower the %1$s</string>
+    <string name="band_raise">Raise the %1$s</string>
     <string name="band_source_app">Set from the app.</string>
     <string name="band_source_default">The fridge\'s default, from its configuration file.</string>
     <string name="band_min">Minimum</string>

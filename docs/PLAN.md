@@ -295,3 +295,11 @@ Choices made while building, not visible in the sections above:
   the device, since debug can also change the real fridge's band.
 - **Simulator for development** runs on a development machine, not on the Pi
   (see README).
+- **Visual design**: always dark with a fixed pastel palette (`ui/theme/Palette.kt`),
+  Manrope (SIL OFL, licence in `app/src/main/assets/licenses/`). Chosen from three
+  mockups ("dial", "pastel cards", "instrument"): the dial won. The Status dial shows
+  the band as a mint arc and the temperature as a needle on a 10 °C scale centred on
+  the band; Band shows the same dial with blue (min) and peach (max) knobs; the widget
+  draws it as a bitmap, since Glance cannot draw arcs, and shrinks when narrow.
+  Colors carry meaning: mint band/OK, blue compressor/minimum, peach maximum/stale,
+  lilac curves and SAFE, pastel red faults.

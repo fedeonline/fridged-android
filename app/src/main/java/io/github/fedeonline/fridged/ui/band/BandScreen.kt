@@ -1,20 +1,30 @@
 package io.github.fedeonline.fridged.ui.band
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,17 +33,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.fedeonline.fridged.R
 import io.github.fedeonline.fridged.model.Band
+import io.github.fedeonline.fridged.ui.dial.Dial
+import io.github.fedeonline.fridged.ui.dial.DialScale
 import io.github.fedeonline.fridged.ui.format.formatBand
-import io.github.fedeonline.fridged.ui.format.formatCelsius
+import io.github.fedeonline.fridged.ui.theme.FridgedIcons
 import io.github.fedeonline.fridged.ui.theme.FridgedTheme
+import io.github.fedeonline.fridged.ui.theme.Palette
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -83,45 +101,79 @@ private fun Ready(state: BandUiState.Ready, actions: BandActions, modifier: Modi
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+            .padding(horizontal = 24.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Card(Modifier.fillMaxWidth()) {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        // The scale follows the applied band, so it stays put while the draft moves.
+        Dial(
+            scale = DialScale.around(state.applied ?: state.draft, null),
+            band = state.draft,
+            knobs = true,
+            modifier = Modifier.size(240.dp).align(Alignment.CenterHorizontally),
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    stringResource(R.string.band_applied),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
+                    String.format(locale, "%.1f – %.1f", state.draft.min, state.draft.max),
+                    style = MaterialTheme.typography.displaySmall,
                 )
                 Text(
-                    state.applied?.let { formatBand(it, locale) } ?: "—",
-                    style = MaterialTheme.typography.headlineSmall,
+                    stringResource(if (state.draft == state.applied) R.string.band_dial_applied else R.string.band_dial_new),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Palette.Muted,
                 )
-                // While restoring, the applied band is still the old custom one.
-                if (state.sync !is Sync.Restoring) {
-                    Text(stringResource(if (state.custom != null) R.string.band_source_app else R.string.band_source_default))
-                }
             }
         }
 
-        Card(Modifier.fillMaxWidth()) {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Stepper(R.string.band_min, state.draft.min, locale, state.canLowerMin, state.canRaiseMin, actions.lowerMin, actions.raiseMin)
-                Stepper(R.string.band_max, state.draft.max, locale, state.canLowerMax, state.canRaiseMax, actions.lowerMax, actions.raiseMax)
-                state.problems.forEach {
-                    Text(stringResource(it.message()), color = MaterialTheme.colorScheme.error)
-                }
-                Button(onClick = actions.save, enabled = state.canSave, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.band_save))
-                }
-                Text(stringResource(R.string.band_hint), style = MaterialTheme.typography.bodySmall)
-            }
+        Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Palette.Surface).padding(horizontal = 16.dp, vertical = 4.dp)) {
+            Stepper(R.string.band_min, Palette.Blue, state.draft.min, locale, state.canLowerMin, state.canRaiseMin, actions.lowerMin, actions.raiseMin)
+            HorizontalDivider(color = Palette.SurfaceHigh)
+            Stepper(R.string.band_max, Palette.Peach, state.draft.max, locale, state.canLowerMax, state.canRaiseMax, actions.lowerMax, actions.raiseMax)
+        }
+        state.problems.forEach {
+            Text(stringResource(it.message()), color = Palette.Red, style = MaterialTheme.typography.bodyMedium)
         }
 
-        SyncLine(state.sync, locale)
+        Button(
+            onClick = actions.save,
+            enabled = state.canSave,
+            modifier = Modifier.fillMaxWidth().height(56.dp),
+        ) {
+            Text(stringResource(R.string.band_save), style = MaterialTheme.typography.titleMedium)
+        }
 
-        TextButton(onClick = actions.restore, enabled = state.canRestore, modifier = Modifier.fillMaxWidth()) {
-            Text(stringResource(R.string.band_restore))
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
+            SyncLine(state.sync, locale)
+            state.applied?.let { applied ->
+                StatusLine(
+                    FridgedIcons.Check,
+                    Palette.Mint,
+                    stringResource(R.string.band_applied_value, formatBand(applied, locale)),
+                )
+            }
+            // While restoring, the applied band is still the old custom one.
+            if (state.sync !is Sync.Restoring) {
+                Text(
+                    stringResource(if (state.custom != null) R.string.band_source_app else R.string.band_source_default),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Palette.Muted,
+                    textAlign = TextAlign.Center,
+                )
+            }
+            Text(
+                stringResource(R.string.band_hint),
+                style = MaterialTheme.typography.bodySmall,
+                color = Palette.Faint,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        TextButton(
+            onClick = actions.restore,
+            enabled = state.canRestore,
+            colors = ButtonDefaults.textButtonColors(contentColor = Palette.Lilac),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(stringResource(R.string.band_restore), style = MaterialTheme.typography.labelLarge)
         }
     }
 }
@@ -129,6 +181,7 @@ private fun Ready(state: BandUiState.Ready, actions: BandActions, modifier: Modi
 @Composable
 private fun Stepper(
     @StringRes label: Int,
+    dot: Color,
     value: Double,
     locale: Locale,
     canLower: Boolean,
@@ -136,42 +189,63 @@ private fun Stepper(
     onLower: () -> Unit,
     onRaise: () -> Unit,
 ) {
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Text(stringResource(label), modifier = Modifier.weight(1f))
-        FilledTonalIconButton(onClick = onLower, enabled = canLower) { Text("−", style = MaterialTheme.typography.titleLarge) }
+    Row(Modifier.fillMaxWidth().height(64.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        Box(Modifier.size(10.dp).clip(CircleShape).background(dot))
+        Text(stringResource(label), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.weight(1f))
+        RoundButton("−", stringResource(R.string.band_lower, stringResource(label)), canLower, onLower)
         Text(
-            formatCelsius(value, locale),
+            String.format(locale, "%.1f°", value),
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center,
-            // Fixed width keeps the buttons aligned between "8,0 °C" and "11,0 °C".
-            modifier = Modifier.width(112.dp),
+            // Fixed width keeps the buttons aligned between "8,0°" and "11,0°".
+            modifier = Modifier.width(72.dp),
         )
-        FilledTonalIconButton(onClick = onRaise, enabled = canRaise) { Text("+", style = MaterialTheme.typography.titleLarge) }
+        RoundButton("+", stringResource(R.string.band_raise, stringResource(label)), canRaise, onRaise)
+    }
+}
+
+@Composable
+private fun RoundButton(symbol: String, description: String, enabled: Boolean, onClick: () -> Unit) {
+    FilledIconButton(
+        onClick = onClick,
+        enabled = enabled,
+        shape = CircleShape,
+        colors = IconButtonDefaults.filledIconButtonColors(
+            containerColor = Palette.SurfaceHigh,
+            contentColor = Palette.OnSurface,
+            disabledContainerColor = Palette.Track,
+            disabledContentColor = Palette.Faint,
+        ),
+        modifier = Modifier.size(44.dp).semantics { contentDescription = description },
+    ) {
+        Text(symbol, style = MaterialTheme.typography.titleLarge)
+    }
+}
+
+@Composable
+private fun StatusLine(icon: ImageVector, color: Color, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(16.dp))
+        Text(text, style = MaterialTheme.typography.bodyMedium, color = color)
     }
 }
 
 @Composable
 private fun SyncLine(sync: Sync, locale: Locale) {
     val time = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale).withZone(ZoneId.systemDefault())
-    val (text, isError) = when (sync) {
-        Sync.Idle -> return
-        is Sync.Waiting -> stringResource(R.string.band_waiting, formatBand(sync.target, locale)) to false
-        is Sync.Restoring -> stringResource(R.string.band_restoring) to false
-        is Sync.Applied -> stringResource(R.string.band_applied_at, time.format(sync.at)) to false
-        Sync.Failed -> stringResource(R.string.band_failed) to true
+    when (sync) {
+        Sync.Idle -> Unit
+        is Sync.Waiting -> StatusLine(FridgedIcons.Sliders, Palette.Peach, stringResource(R.string.band_waiting, formatBand(sync.target, locale)))
+        is Sync.Restoring -> StatusLine(FridgedIcons.Sliders, Palette.Peach, stringResource(R.string.band_restoring))
+        is Sync.Applied -> StatusLine(FridgedIcons.Check, Palette.Mint, stringResource(R.string.band_applied_at, time.format(sync.at)))
+        Sync.Failed -> StatusLine(Icons.Filled.Warning, Palette.Red, stringResource(R.string.band_failed))
     }
-    Text(
-        text,
-        color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center,
-    )
 }
 
 @Composable
 private fun Message(@StringRes text: Int, modifier: Modifier) {
     Box(modifier.fillMaxSize(), Alignment.Center) {
-        Text(stringResource(text), textAlign = TextAlign.Center, modifier = Modifier.padding(24.dp))
+        Text(stringResource(text), textAlign = TextAlign.Center, color = Palette.Muted, modifier = Modifier.padding(24.dp))
     }
 }
 

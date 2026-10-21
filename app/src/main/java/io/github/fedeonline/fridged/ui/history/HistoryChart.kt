@@ -1,6 +1,5 @@
 package io.github.fedeonline.fridged.ui.history
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -26,7 +25,10 @@ import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoScrollState
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
 import com.patrykandpatrick.vico.compose.common.Fill
+import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
+import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
 import io.github.fedeonline.fridged.model.Sample
+import io.github.fedeonline.fridged.ui.theme.Palette
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -44,7 +46,6 @@ fun HistoryChart(samples: List<Sample>, end: Instant, range: HistoryRange, modif
     val data = remember(samples, end, range) { ChartData.of(samples, end, range.span, zone) }
     if (data.runs.isEmpty()) return
 
-    val colors = MaterialTheme.colorScheme
     val chartColors = historyChartColors()
     val stripHeight = with(LocalDensity.current) { 6.dp.toPx() }
     val decoration = remember(data, chartColors, stripHeight) {
@@ -65,7 +66,9 @@ fun HistoryChart(samples: List<Sample>, end: Instant, range: HistoryRange, modif
         ((spacing - data.minX.toLong().mod(spacing)) % spacing).toInt()
     }
 
-    val line = LineCartesianLayer.rememberLine(fill = LineCartesianLayer.LineFill.single(Fill(colors.primary)))
+    val line = LineCartesianLayer.rememberLine(fill = LineCartesianLayer.LineFill.single(Fill(Palette.Lilac)))
+    // Axis labels and guidelines from the Material theme: light on the dark background.
+    ProvideVicoTheme(rememberM3VicoTheme()) {
     CartesianChartHost(
         chart = rememberCartesianChart(
             rememberLineCartesianLayer(
@@ -101,23 +104,20 @@ fun HistoryChart(samples: List<Sample>, end: Instant, range: HistoryRange, modif
         scrollState = rememberVicoScrollState(scrollEnabled = false),
         zoomState = rememberVicoZoomState(zoomEnabled = false, initialZoom = Zoom.Content),
     )
+    }
 }
 
 /** Colors of the chart background marks, shared with the legend. */
 data class HistoryChartColors(val band: Color, val compressor: Color, val safe: Color)
 
-@Composable
-fun historyChartColors(): HistoryChartColors {
-    val colors = MaterialTheme.colorScheme
-    return HistoryChartColors(
-        band = colors.primary.copy(alpha = 0.2f),
-        compressor = colors.tertiary,
-        safe = colors.error.copy(alpha = 0.15f),
-    )
-}
+fun historyChartColors() = HistoryChartColors(
+    band = Palette.Mint.copy(alpha = 0.20f),
+    compressor = Palette.Blue,
+    safe = Palette.Red.copy(alpha = 0.28f),
+)
 
 /** Draws the band, SAFE periods and compressor strip under the curve. */
-private class HistoryDecoration(
+internal class HistoryDecoration(
     private val segments: List<Segment>,
     colors: HistoryChartColors,
     private val stripHeight: Float,

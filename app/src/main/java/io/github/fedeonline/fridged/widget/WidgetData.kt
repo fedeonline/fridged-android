@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import io.github.fedeonline.fridged.model.Band
 import io.github.fedeonline.fridged.model.Mode
 import io.github.fedeonline.fridged.model.RelayState
 import io.github.fedeonline.fridged.model.STALE_AFTER
@@ -26,6 +27,8 @@ sealed interface WidgetData {
         val compressorOn: Boolean,
         val safe: Boolean,
         val overrunFault: Boolean,
+        /** The band in force, for the mini dial; null in samples without one. */
+        val band: Band?,
         /** When the widget last refreshed: staleness is judged against this. */
         val checkedAt: Instant,
     ) : WidgetData {
@@ -52,6 +55,8 @@ sealed interface WidgetData {
         private val SAFE = booleanPreferencesKey("safe")
         private val OVERRUN = booleanPreferencesKey("overrun")
         private val CHECKED_AT = longPreferencesKey("checkedAt")
+        private val BAND_MIN = doublePreferencesKey("bandMin")
+        private val BAND_MAX = doublePreferencesKey("bandMax")
 
         fun of(sample: Sample?, checkedAt: Instant): WidgetData = sample?.let {
             Status(
@@ -60,6 +65,7 @@ sealed interface WidgetData {
                 compressorOn = it.relay == RelayState.ON,
                 safe = it.mode == Mode.SAFE,
                 overrunFault = it.overrunFault,
+                band = it.band,
                 checkedAt = checkedAt,
             )
         } ?: NoData
@@ -74,6 +80,7 @@ sealed interface WidgetData {
                 compressorOn = prefs[COMPRESSOR_ON] ?: false,
                 safe = prefs[SAFE] ?: false,
                 overrunFault = prefs[OVERRUN] ?: false,
+                band = prefs[BAND_MIN]?.let { min -> prefs[BAND_MAX]?.let { max -> Band(min, max) } },
                 checkedAt = Instant.ofEpochMilli(prefs[CHECKED_AT] ?: return null),
             )
             else -> null
@@ -92,6 +99,10 @@ sealed interface WidgetData {
                     prefs[SAFE] = data.safe
                     prefs[OVERRUN] = data.overrunFault
                     prefs[CHECKED_AT] = data.checkedAt.toEpochMilli()
+                    data.band?.let {
+                        prefs[BAND_MIN] = it.min
+                        prefs[BAND_MAX] = it.max
+                    }
                 }
             }
         }
