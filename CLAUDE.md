@@ -24,7 +24,11 @@ already publishes or reads. Nothing changes on the Raspberry Pi. The full plan i
 - **Never commit credentials.** `google-services.json`, keystores, keystore passwords,
   `.firebaserc` and service account JSON files stay local (see `.gitignore` and
   `docs/PLAN.md` section 9). The repo only holds `google-services.example.json` with fake
-  values. Check `git status` before every commit.
+  values. Check `git status` before every commit; the gitleaks pre-commit hook
+  (`.githooks/`, `git config core.hooksPath .githooks`) must stay enabled. Never bypass it
+  with `--no-verify`.
+- **No reference to the user's employer** in the repository, its history or commit
+  metadata. Commits use the identity configured locally in this repository.
 - **The data contract is owned by `fridged`.** `docs/` holds the contract and the JSON
   fixtures used by tests. When `fridged` changes a field, updating the contract and the
   fixtures is the explicit sync step between the two repos.

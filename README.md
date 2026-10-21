@@ -32,6 +32,13 @@ Nothing secret is in this repository. Each machine needs:
 
    The release build fails with a clear message if any of these is missing.
 
+3. **Secret scanner** (blocks commits that add keys or passwords):
+
+   ```sh
+   brew install gitleaks
+   git config core.hooksPath .githooks
+   ```
+
 ## Build and install
 
 ```sh
