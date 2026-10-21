@@ -1,0 +1,47 @@
+{
+  "name": "projects/demo-fridged/databases/(default)/documents/devices/fridge-sim/samples/9b1c03f2-000000060000",
+  "fields": {
+    "time": {
+      "timestampValue": "2026-10-15T19:58:00.123Z"
+    },
+    "timeMs": {
+      "integerValue": "1792094280123"
+    },
+    "clockSynced": {
+      "booleanValue": true
+    },
+    "timeCorrected": {
+      "booleanValue": true
+    },
+    "bootId": {
+      "stringValue": "9b1c03f2"
+    },
+    "uptimeMs": {
+      "integerValue": "60000"
+    },
+    "temperature": {
+      "doubleValue": 4.0625
+    },
+    "relay": {
+      "stringValue": "OFF"
+    },
+    "wanted": {
+      "stringValue": "OFF"
+    },
+    "reason": {
+      "stringValue": "inBand"
+    },
+    "mode": {
+      "stringValue": "NORMAL"
+    },
+    "overrunFault": {
+      "booleanValue": false
+    },
+    "targetMin": {
+      "nullValue": null
+    },
+    "targetMax": {
+      "nullValue": null
+    }
+  }
+}

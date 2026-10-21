@@ -35,6 +35,10 @@ publishes or reads. Nothing changes on the Raspberry Pi.
 
 ## 3. Data contract (from fridged)
 
+The maintained version of this section, with fixtures, is
+[`data-contract.md`](data-contract.md); it supersedes the summary below (for example,
+`targetMin`/`targetMax` are null in samples spooled before the band was recorded).
+
 All documents live under `devices/{deviceId}/`. Real device id: `fridge`;
 simulated: `fridge-sim`.
 

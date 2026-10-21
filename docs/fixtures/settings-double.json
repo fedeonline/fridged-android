@@ -1,0 +1,11 @@
+{
+  "name": "projects/demo-fridged/databases/(default)/documents/devices/fridge-sim/settings/current",
+  "fields": {
+    "targetMin": {
+      "doubleValue": 2.5
+    },
+    "targetMax": {
+      "doubleValue": 4.5
+    }
+  }
+}

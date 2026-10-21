@@ -63,6 +63,11 @@ android {
         buildConfig = true
     }
 
+    sourceSets {
+        // Fixtures shared with the data contract (docs/data-contract.md).
+        getByName("test").resources.directories.add("../docs/fixtures")
+    }
+
     androidResources {
         // Per-app language picker in system settings (English default, Italian).
         generateLocaleConfig = true
@@ -104,4 +109,5 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.kotlinx.serialization.json)
 }
