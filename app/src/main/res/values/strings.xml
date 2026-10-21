@@ -71,5 +71,22 @@
     <string name="history_mean">Average</string>
     <string name="history_duty">Compressor on</string>
 
-    <string name="not_implemented">Coming soon.</string>
+    <!-- Band -->
+    <string name="band_applied">Applied by the fridge</string>
+    <string name="band_source_app">Set from the app.</string>
+    <string name="band_source_default">The fridge\'s default, from its configuration file.</string>
+    <string name="band_min">Minimum</string>
+    <string name="band_max">Maximum</string>
+    <string name="band_save">Save</string>
+    <string name="band_hint">The fridge picks up a new band at its next upload, usually within 5 minutes.</string>
+    <string name="band_restore">Restore the fridge\'s default</string>
+    <string name="band_waiting">Waiting for the fridge to apply %1$s…</string>
+    <string name="band_restoring">Waiting for the fridge to go back to its default…</string>
+    <string name="band_applied_at">Applied by the fridge at %1$s.</string>
+    <string name="band_failed">Could not save. Check the connection and try again.</string>
+    <string name="band_problem_not_finite">Enter valid numbers.</string>
+    <string name="band_problem_min_range">The minimum must be between 0 and 25 °C.</string>
+    <string name="band_problem_max_range">The maximum must be between 0 and 25 °C.</string>
+    <string name="band_problem_narrow">The maximum must be at least 0.5 °C above the minimum.</string>
+
 </resources>

@@ -71,5 +71,22 @@
     <string name="history_mean">Media</string>
     <string name="history_duty">Compressore acceso</string>
 
-    <string name="not_implemented">Prossimamente.</string>
+    <!-- Band -->
+    <string name="band_applied">Applicato dal frigo</string>
+    <string name="band_source_app">Impostato dall\'app.</string>
+    <string name="band_source_default">Valore predefinito del frigo, dal suo file di configurazione.</string>
+    <string name="band_min">Minimo</string>
+    <string name="band_max">Massimo</string>
+    <string name="band_save">Salva</string>
+    <string name="band_hint">Il frigo legge il nuovo intervallo al prossimo invio dei dati, di solito entro 5 minuti.</string>
+    <string name="band_restore">Ripristina il valore predefinito del frigo</string>
+    <string name="band_waiting">In attesa che il frigo applichi %1$s…</string>
+    <string name="band_restoring">In attesa che il frigo torni al valore predefinito…</string>
+    <string name="band_applied_at">Applicato dal frigo alle %1$s.</string>
+    <string name="band_failed">Salvataggio non riuscito. Controlla la connessione e riprova.</string>
+    <string name="band_problem_not_finite">Inserisci numeri validi.</string>
+    <string name="band_problem_min_range">Il minimo deve essere tra 0 e 25 °C.</string>
+    <string name="band_problem_max_range">Il massimo deve essere tra 0 e 25 °C.</string>
+    <string name="band_problem_narrow">Il massimo deve superare il minimo di almeno 0,5 °C.</string>
+
 </resources>

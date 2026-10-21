@@ -1,8 +1,6 @@
 package io.github.fedeonline.fridged.ui.home
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -25,7 +23,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -35,6 +32,8 @@ import io.github.fedeonline.fridged.R
 import io.github.fedeonline.fridged.data.fake.FakeData
 import io.github.fedeonline.fridged.data.fake.FakeFridgeRepository
 import io.github.fedeonline.fridged.model.Device
+import io.github.fedeonline.fridged.ui.band.BandScreen
+import io.github.fedeonline.fridged.ui.band.BandViewModel
 import io.github.fedeonline.fridged.ui.history.HistoryScreen
 import io.github.fedeonline.fridged.ui.history.HistoryViewModel
 import io.github.fedeonline.fridged.ui.status.StatusScreen
@@ -56,6 +55,7 @@ fun HomeScreen(
     onSignOut: () -> Unit,
     statusViewModel: @Composable () -> StatusViewModel,
     historyViewModel: @Composable () -> HistoryViewModel,
+    bandViewModel: @Composable () -> BandViewModel,
 ) {
     var section by rememberSaveable { mutableStateOf(Section.STATUS) }
     Scaffold(
@@ -86,10 +86,7 @@ fun HomeScreen(
                 modifier = contentModifier,
             )
             Section.HISTORY -> HistoryScreen(viewModel = historyViewModel(), modifier = contentModifier)
-            // Band arrives with feature 6.
-            Section.BAND -> Box(contentModifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(stringResource(R.string.not_implemented))
-            }
+            Section.BAND -> BandScreen(viewModel = bandViewModel(), modifier = contentModifier)
         }
     }
 }
@@ -126,6 +123,7 @@ private fun HomePreview() {
             onSignOut = {},
             statusViewModel = { viewModel { StatusViewModel(repository, Device.SIMULATED) } },
             historyViewModel = { viewModel { HistoryViewModel(repository, Device.SIMULATED) } },
+            bandViewModel = { viewModel { BandViewModel(repository, Device.SIMULATED) } },
         )
     }
 }
