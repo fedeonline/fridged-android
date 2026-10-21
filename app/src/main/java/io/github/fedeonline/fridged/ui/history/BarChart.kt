@@ -57,7 +57,7 @@ fun BarChart(
     Canvas(
         modifier
             .fillMaxWidth()
-            .height(if (compact) 88.dp else 232.dp)
+            .height(if (compact) 88.dp else 236.dp)
             .semantics { contentDescription = description },
     ) {
         val axis = if (compact) 0f else 28.dp.toPx()
@@ -66,7 +66,7 @@ fun BarChart(
         val tempBottom = top + plotHeight
         val dutyTop = tempBottom + (if (compact) 6.dp else 12.dp).toPx()
         val dutyHeight = (if (compact) 10.dp else 28.dp).toPx()
-        val labelTop = dutyTop + dutyHeight + 8.dp.toPx()
+        val labelTop = dutyTop + dutyHeight + 10.dp.toPx()
 
         val plotWidth = size.width - axis
         val slot = plotWidth / chart.bars.size
@@ -85,14 +85,16 @@ fun BarChart(
             }
         }
 
-        // Y labels on whole degrees (every 2 when the range is wide).
+        // The bars stand on minY: a baseline marks it.
+        drawLine(Palette.Outline, Offset(axis, tempBottom), Offset(size.width, tempBottom), 1.dp.toPx())
+
+        // Y labels on whole degrees from the base up (every 2 when the range is wide), so the
+        // height of a bar can be read against them.
         val step = if (chart.maxY - chart.minY > 6) 2 else 1
         var degree = ceil(chart.minY).toInt()
         while (!compact && degree <= chart.maxY) {
-            if (degree > chart.minY) {
-                val label = measurer.measure("$degree°", labelStyle)
-                drawText(label, topLeft = Offset(axis - label.size.width - 6.dp.toPx(), y(degree.toDouble()) - label.size.height / 2))
-            }
+            val label = measurer.measure("$degree°", labelStyle)
+            drawText(label, topLeft = Offset(axis - label.size.width - 6.dp.toPx(), y(degree.toDouble()) - label.size.height / 2))
             degree += step
         }
 
@@ -117,12 +119,13 @@ fun BarChart(
             } else {
                 drawRoundRect(Palette.SurfaceHigh, Offset(left, dutyTop + dutyHeight - 2.dp.toPx()), Size(barWidth, 2.dp.toPx()), CornerRadius(1.dp.toPx()))
             }
-            // Time labels on whole hours or days.
+            // Time labels on whole hours or days, centred under the bar they name, with a tick.
             if (!compact && range.isLabelled(bar.start, zone)) {
                 val label = measurer.measure(format.format(bar.start), labelStyle)
-                // Left-aligned on the bucket's start: the label names the hour or day that begins there.
-                val x = (axis + i * slot).coerceAtMost(size.width - label.size.width)
+                val centre = left + barWidth / 2
+                val x = (centre - label.size.width / 2f).coerceIn(0f, size.width - label.size.width)
                 if (x >= labelsEnd + 6.dp.toPx()) {
+                    drawLine(Palette.Faint, Offset(centre, labelTop - 5.dp.toPx()), Offset(centre, labelTop - 1.dp.toPx()), 1.dp.toPx())
                     drawText(label, topLeft = Offset(x, labelTop))
                     labelsEnd = x + label.size.width
                 }
