@@ -33,7 +33,7 @@ publishes or reads. Nothing changes on the Raspberry Pi.
 | Notifications | Not needed for now; maybe later. healthchecks.io keeps covering stale data and overrun fault. |
 | Stale data | Status is shown as stale when `time` is more than 15 minutes old (three missed upload rounds). |
 | Settings document | The app writes exactly `targetMin` and `targetMax` (see 3.3). |
-| Charts | Vico. |
+| Charts | Bar charts drawn with Compose `Canvas` (Vico was used first, then dropped; see section 12). |
 
 ## 3. Data contract (from fridged)
 
@@ -130,7 +130,7 @@ Firestore emulator before being deployed:
 ## 5. Architecture
 
 Stack: Kotlin, Jetpack Compose, Firebase Android SDK (Auth + Firestore),
-Vico for charts. MVVM with ViewModels
+Compose `Canvas` for charts. MVVM with ViewModels
 exposing observable UI state.
 
 Single Gradle module `app`, organized in packages:
@@ -304,3 +304,10 @@ Choices made while building, not visible in the sections above:
   launcher icon is the same dial (mint band in release, peach in debug).
   Colors carry meaning: mint band/OK, blue compressor/minimum, peach maximum/stale,
   lilac curves and SAFE, pastel red faults.
+- **Charts as bars**: the continuous Vico curves were replaced by bars drawn with
+  Compose `Canvas`, also chosen from mockups: the mean temperature per bucket (15 min,
+  1 h or 6 h by range, aligned to the local clock), colored by its position against
+  the band (mint inside, blue below, peach above, lilac with SAFE mode), and the
+  compressor's duty cycle per bucket as a row of blue columns underneath. Status shows
+  the same chart for the last 6 hours in a compact form without labels. Less precise
+  than a curve, easier to read; Vico is no longer a dependency.

@@ -38,9 +38,16 @@ fun BarTone.color(): Color = when (this) {
 /**
  * Mean temperature per bucket as rounded bars over the shaded band, and the compressor's
  * duty cycle per bucket as a row of blue columns underneath (design "barre con compressore").
+ * [compact] is the Status preview: shorter, without axis labels.
  */
 @Composable
-fun BarChart(chart: HistoryBars, range: HistoryRange, description: String, modifier: Modifier = Modifier) {
+fun BarChart(
+    chart: HistoryBars,
+    range: HistoryRange,
+    description: String,
+    modifier: Modifier = Modifier,
+    compact: Boolean = false,
+) {
     val measurer = rememberTextMeasurer()
     val labelStyle = MaterialTheme.typography.labelSmall.copy(color = Palette.Faint)
     val locale = LocalConfiguration.current.locales[0]
@@ -50,15 +57,15 @@ fun BarChart(chart: HistoryBars, range: HistoryRange, description: String, modif
     Canvas(
         modifier
             .fillMaxWidth()
-            .height(232.dp)
+            .height(if (compact) 88.dp else 232.dp)
             .semantics { contentDescription = description },
     ) {
-        val axis = 28.dp.toPx()
+        val axis = if (compact) 0f else 28.dp.toPx()
         val top = 8.dp.toPx()
-        val plotHeight = 160.dp.toPx()
+        val plotHeight = (if (compact) 62.dp else 160.dp).toPx()
         val tempBottom = top + plotHeight
-        val dutyTop = tempBottom + 12.dp.toPx()
-        val dutyHeight = 28.dp.toPx()
+        val dutyTop = tempBottom + (if (compact) 6.dp else 12.dp).toPx()
+        val dutyHeight = (if (compact) 10.dp else 28.dp).toPx()
         val labelTop = dutyTop + dutyHeight + 8.dp.toPx()
 
         val plotWidth = size.width - axis
@@ -81,7 +88,7 @@ fun BarChart(chart: HistoryBars, range: HistoryRange, description: String, modif
         // Y labels on whole degrees (every 2 when the range is wide).
         val step = if (chart.maxY - chart.minY > 6) 2 else 1
         var degree = ceil(chart.minY).toInt()
-        while (degree <= chart.maxY) {
+        while (!compact && degree <= chart.maxY) {
             if (degree > chart.minY) {
                 val label = measurer.measure("$degree°", labelStyle)
                 drawText(label, topLeft = Offset(axis - label.size.width - 6.dp.toPx(), y(degree.toDouble()) - label.size.height / 2))
@@ -111,7 +118,7 @@ fun BarChart(chart: HistoryBars, range: HistoryRange, description: String, modif
                 drawRoundRect(Palette.SurfaceHigh, Offset(left, dutyTop + dutyHeight - 2.dp.toPx()), Size(barWidth, 2.dp.toPx()), CornerRadius(1.dp.toPx()))
             }
             // Time labels on whole hours or days.
-            if (range.isLabelled(bar.start, zone)) {
+            if (!compact && range.isLabelled(bar.start, zone)) {
                 val label = measurer.measure(format.format(bar.start), labelStyle)
                 // Left-aligned on the bucket's start: the label names the hour or day that begins there.
                 val x = (axis + i * slot).coerceAtMost(size.width - label.size.width)
@@ -123,6 +130,7 @@ fun BarChart(chart: HistoryBars, range: HistoryRange, description: String, modif
         }
 
         // A small snowflake marks the compressor row.
+        if (compact) return@Canvas
         val c = Offset(axis - 13.dp.toPx(), dutyTop + dutyHeight / 2)
         val r = 6.dp.toPx()
         for (degrees in listOf(90.0, 30.0, 150.0)) {

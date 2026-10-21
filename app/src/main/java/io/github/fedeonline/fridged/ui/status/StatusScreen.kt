@@ -28,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,16 +47,18 @@ import io.github.fedeonline.fridged.model.Mode
 import io.github.fedeonline.fridged.model.Reason
 import io.github.fedeonline.fridged.model.RelayState
 import io.github.fedeonline.fridged.model.Sample
-import io.github.fedeonline.fridged.ui.chart.TemperatureSparkline
-import io.github.fedeonline.fridged.ui.chart.hasEnoughReadings
 import io.github.fedeonline.fridged.ui.dial.Dial
 import io.github.fedeonline.fridged.ui.dial.DialScale
 import io.github.fedeonline.fridged.ui.format.formatBand
+import io.github.fedeonline.fridged.ui.history.BarChart
+import io.github.fedeonline.fridged.ui.history.HistoryBars
+import io.github.fedeonline.fridged.ui.history.HistoryRange
 import io.github.fedeonline.fridged.ui.theme.FridgedIcons
 import io.github.fedeonline.fridged.ui.theme.FridgedTheme
 import io.github.fedeonline.fridged.ui.theme.Palette
 import java.time.Duration
 import java.time.Instant
+import java.time.ZoneId
 import java.util.Locale
 
 @Composable
@@ -161,13 +164,11 @@ private fun Ready(state: StatusUiState.Ready, onOpenHistory: () -> Unit, modifie
                 Text(stringResource(R.string.status_recent), style = MaterialTheme.typography.labelMedium, color = Palette.Muted)
                 Text(stringResource(R.string.status_open_history), style = MaterialTheme.typography.labelMedium, color = Palette.Lilac)
             }
-            if (hasEnoughReadings(state.recent)) {
-                TemperatureSparkline(
-                    samples = state.recent,
-                    now = state.now,
-                    span = RECENT_SPAN,
-                    modifier = Modifier.fillMaxWidth().height(80.dp),
-                )
+            val chart = remember(state.recent, state.now) {
+                HistoryBars.of(state.recent, state.now, HistoryRange.SIX_HOURS, ZoneId.systemDefault())
+            }
+            if (chart.bars.any { it.mean != null }) {
+                BarChart(chart, HistoryRange.SIX_HOURS, stringResource(R.string.status_recent), compact = true)
             } else {
                 Text(stringResource(R.string.status_recent_empty), style = MaterialTheme.typography.bodySmall, color = Palette.Muted)
             }
